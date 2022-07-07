@@ -1,0 +1,2 @@
+def startGrasp(data):
+    pass

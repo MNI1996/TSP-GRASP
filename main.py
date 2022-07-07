@@ -2,25 +2,22 @@
 
 # Press Mayús+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-from src.arista import Arista
+from src.grasp import startGrasp
+from src.importer import start_graph
 
-
-def buildear(dicc): #O(n^2)
-    adys = []
-    for i in dicc:
-        for j in dicc:
-            if dicc[i][j] > 0:
-                adys.append(Arista().set_data(i, j, dicc[i][j]))
-    return adys
-
-
-
+GRAPH_LABEL = 'graph'
+VERTEX_LABEL = 'vertex'
+EDGES_LABEL = 'edge'
+COST_LABEL = 'cost'
+root=""
 
 
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print('PyCharm')
+    #startGrasp("asd")
+    source='sample/' #input()
 
+    start_graph(source)
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
