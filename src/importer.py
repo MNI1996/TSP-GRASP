@@ -37,12 +37,13 @@ def get_graph_from_xmlgraph(xmlgraph):
   return graph
 
 
-def start_graph(source):
-  DATASET = 'gr24.xml'
-  FILE_PATH = source
+def create_graph(dataset):
+  DATASET = dataset
+  FILE_PATH = 'sample/'
   FULL_FILE_PATH =FILE_PATH+DATASET
   tree = ET.parse(FULL_FILE_PATH)
   root = tree.getroot()
   xmlgraph = filter_xmlelements(root, GRAPH_LABEL)[0]
   graph = get_graph_from_xmlgraph(xmlgraph)
   printGraph(graph)
+  return graph
