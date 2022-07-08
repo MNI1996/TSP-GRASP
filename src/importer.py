@@ -1,49 +1,54 @@
-import pathlib
+import numpy as np
 
-from src.graph import generateMatrix,printGraph
+from src.graph import generateMatrix
 from xml.etree import ElementTree as ET
-import sys
-
 
 GRAPH_LABEL = 'graph'
 VERTEX_LABEL = 'vertex'
 EDGES_LABEL = 'edge'
 COST_LABEL = 'cost'
-#DATASET = 'gr24.xml'
-#FILE_PATH="D:\Facultad\Algoritmos\TSP-GRASP\sample\ "
-#FULL_FILE_PATH= FILE_PATH+DATASET
-#tree = ET.parse(FULL_FILE_PATH)
-#root = tree.getroot()
+
 
 def filter_xmlelements(elem, tag):
-  print(elem)
-  return list(filter(lambda x: x.tag == tag, elem.getchildren()))
+    return list(filter(lambda x: x.tag == tag, list(elem)))
+
 
 def get_cost_from_xmledge(xmledge):
-  cost = xmledge.get(COST_LABEL)
-  return float(cost)
+    cost = xmledge.get(COST_LABEL)
+    return float(cost)
+
 
 def get_edges_from_xmlvertex(xmlvertex):
-  xmledges = xmlvertex.getchildren()
-  return list(map(get_cost_from_xmledge, xmledges))
+    xmledges = list(xmlvertex)
+    return list(map(get_cost_from_xmledge, xmledges))
+
 
 def get_graph_from_xmlgraph(xmlgraph):
-  xmlvertexes = filter_xmlelements(xmlgraph, VERTEX_LABEL)
-  total_vertexes = len(xmlvertexes)
-  graph = generateMatrix(total_vertexes, total_vertexes)
+    xmlvertexes = filter_xmlelements(xmlgraph, VERTEX_LABEL)
+    total_vertexes = len(xmlvertexes)
+    graph = generateMatrix(total_vertexes, total_vertexes)
 
-  for vertex_index, xmlvertex in enumerate(xmlvertexes):
-    graph[vertex_index] = get_edges_from_xmlvertex(xmlvertex)
-  return graph
+    for vertex_index, xmlvertex in enumerate(xmlvertexes):
+        graph[vertex_index] = get_edges_from_xmlvertex(xmlvertex)
+    return graph
 
 
-def create_graph(dataset):
-  DATASET = dataset
-  FILE_PATH = 'sample/'
-  FULL_FILE_PATH =FILE_PATH+DATASET
-  tree = ET.parse(FULL_FILE_PATH)
-  root = tree.getroot()
-  xmlgraph = filter_xmlelements(root, GRAPH_LABEL)[0]
-  graph = get_graph_from_xmlgraph(xmlgraph)
-  printGraph(graph)
-  return graph
+def get_graph(problema):
+    FULL_FILE_PATH = './sample/' + problema
+    tree = ET.parse(FULL_FILE_PATH)
+    root = tree.getroot()
+    xmlgraph = filter_xmlelements(root, GRAPH_LABEL)[0]
+    graph = get_graph_from_xmlgraph(xmlgraph)
+    final_grap = generar_diagonañ(graph)
+    return final_grap
+
+
+def generar_diagonañ(graph):
+    np_g = np.array(graph)
+    d = np_g.shape[0]
+    new_g = np.ndarray((d, d+1), dtype=np_g.dtype)
+    new_g[:, 0] = 0
+    new_g[:-1, 1:] = np_g.reshape((d-1, d))
+    new_g = new_g.reshape(-1)[:-d].reshape(d, d)
+    return new_g
+
