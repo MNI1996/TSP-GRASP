@@ -1,33 +1,33 @@
 from src.tsp import greedy
 
 
-def grasp(grafo, inicio, margen, limite_sin_mejorar):
-    camino_inicial, costo_incial = greedy(grafo, inicio, margen)
+def grasp(g, inicio, margen, mejora_limite):
+    camino_inicial, costo = camino_minimo(g, inicio, margen)
 
-    mejor_camino = camino_inicial
-    mejor_costo = costo_incial
-    veces_sin_mejorar = 0
-    vecinos = vecinos_de(mejor_camino)
+    mejor = camino_inicial
+    barato = costo_incial
+    mejoras = 0
+    vecinos = vecinos_de(mejor)
 
     for vecino in vecinos:
-        peso = peso_de(vecino, grafo)
-        if peso < mejor_costo:
-            mejor_costo = peso
-            mejor_camino = vecino
+        peso = peso(vecino, grafo)
+        if peso < barato:
+            mejor = vecino
+            barato = peso
         else:
-            veces_sin_mejorar += 1
+            mejoras += 1
 
-        if veces_sin_mejorar == limite_sin_mejorar:
-            return mejor_camino, mejor_costo
+        if mejoras == mejora_limite:
+            return mejor, barato
 
-    return mejor_camino, mejor_costo
+    return mejor, barato
 
 
 # O(n^2+2n) = O(n^2)
 # Genera la lista de soluciones donde solo cambia un paso
-def vecinos_de(solucion):
-    solucion_inicial = solucion.copy()  # O(n)
-    pos_final = len(solucion) - 1
+def vecinos_de(res):
+    solucion_inicial = res.copy()  # O(n)
+    pos_final = len(res) - 1
     elemento_inicial_final = solucion[0]
     # Saco el primer y el ultimo elemento,ya que es donde inicio el recorrido
     solucion_inicial.pop(0)
